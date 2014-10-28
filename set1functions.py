@@ -1,4 +1,5 @@
 from base64 import b16decode, b64encode
+from string import ascii_lowercase
 
 def hex_to_base64(inputString):
     """
@@ -30,3 +31,31 @@ def fixed_XOR(string_one, string_two):
         # Return an immutable bytes object
         return bytes(retVal)
 
+
+def english_plaintext_score(input_string):
+    """
+    Takes a piece of english plaintext and scores it based on letter frequency
+    The frequency of each letter is computed, and then the mean squared deviation between english frequencies and
+    measured frequencies is computed
+    Input: a string in ascii encoding
+    Returns: the means squared deviation between the letter frequency in the plaintext and the english letter frequency
+    """
+
+    # English letter frequencies in alphabetical order
+    english_frequencies = frequencies_to_list("english_frequencies.txt")
+
+    # input string to lower case
+    input_string = input_string.lower()
+
+    # Calculate plaintext frequencies for each letter in the plaintext
+    plaintext_frequencies = []
+    for char in ascii_lowercase:
+        plaintext_frequencies.append(input_string.count(char))
+
+    # Compute the MSE
+    MSE = 0
+    for i in range(26):
+        MSE += (plaintext_frequencies[i] - english_frequencies[i]) ** 2
+
+    MSE /= 26
+    return MSE
