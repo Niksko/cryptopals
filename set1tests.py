@@ -18,3 +18,11 @@ class Test_Set1(unittest.TestCase):
         string_one = b16decode("AF")
         string_two = b16decode("AFAF")
         self.assertRaises(ValueError, fixed_XOR, string_one, string_two)
+
+    def test_XOR_valid(self):
+        """Tests that the XOR function works for the values provided to us"""
+        string_one = b16decode("1c0111001f010100061a024b53535009181c", casefold = True)
+        string_two = b16decode("686974207468652062756c6c277320657965", casefold = True)
+        result = fixed_XOR(string_one, string_two)
+        expectedResult = b16decode("746865206b696420646f6e277420706c6179", casefold = True)
+        self.assertEqual(result, expectedResult)
