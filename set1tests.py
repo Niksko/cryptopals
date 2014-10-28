@@ -12,3 +12,9 @@ class Test_Set1(unittest.TestCase):
         test_string = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
         correct_string = b'SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t'
         self.assertEqual(hex_to_base64(test_string), correct_string)
+
+    def test_XOR_uneven_length(self):
+        """Tests that the XOR function raises an error for bytestrings of uneven length"""
+        string_one = b16decode("AF")
+        string_two = b16decode("AFAF")
+        self.assertRaises(ValueError, fixed_XOR, string_one, string_two)
