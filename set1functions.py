@@ -78,7 +78,8 @@ def frequencies_to_list(input_file):
     retVal = []
 
     with open(input_file, 'r') as file:
-        line = file.readline().rstrip('\n')
-        retVal.append(float(line))
+        for line in file:
+            line = line.rstrip('\n')
+            retVal.append(float(line))
 
     return retVal
