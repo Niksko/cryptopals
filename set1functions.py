@@ -83,3 +83,26 @@ def frequencies_to_list(input_file):
             retVal.append(float(line))
 
     return retVal
+
+
+def single_byte_decipher(input_string):
+    """
+    Takes the input, XORs it with all possible single byte characters, ranks them based on MSE from english letter
+    frequency, then returns a tuple of the byte with the lowest MSE, the MSE, and the plaintext
+    Input: a bytestring ciphertext
+    Returns: a tuple of the byte with the lowest MSE, the MSE and the plaintext as a byte string
+    """
+    MSE_list = []
+
+    # Loop over all bytes
+    for i in range(256):
+        xor_bytes = bytes([i for _ in range(len(input_string))])
+        xor_result = fixed_XOR(xor_bytes,input_string)
+        score = english_plaintext_score(xor_result)
+        MSE_list.append((bytes([i]), score, xor_result))
+
+    # Sort the list
+    MSE_list.sort(key = lambda tuple: tuple[1])
+
+    # Return the first tuple in the list
+    return MSE_list[0]
