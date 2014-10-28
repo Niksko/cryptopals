@@ -49,8 +49,10 @@ def english_plaintext_score(input_string):
 
     # Calculate plaintext frequencies for each letter in the plaintext
     plaintext_frequencies = []
+    string_length = len(input_string)
     for char in ascii_lowercase:
-        plaintext_frequencies.append(input_string.count(char))
+        char_count = input_string.count(char)
+        plaintext_frequencies.append(char_count/string_length)
 
     # Compute the MSE
     MSE = 0
