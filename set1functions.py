@@ -59,3 +59,20 @@ def english_plaintext_score(input_string):
 
     MSE /= 26
     return MSE
+
+
+def frequencies_to_list(input_file):
+    """
+    Reads letter frequencies from a file and converts them to a list
+    Assumes that the frequencies in the file are ordered from a to z
+    Input: filename of frequency table to import
+    Returns: list of all of the lines in the file converted to floats
+    """
+
+    retVal = []
+
+    with open(input_file, 'r') as file:
+        line = file.readline().rstrip('\n')
+        retVal.append(float(line))
+
+    return retVal
