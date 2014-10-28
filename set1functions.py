@@ -39,10 +39,14 @@ def english_plaintext_score(input_string):
     measured frequencies is computed
     Input: a string in ascii encoding
     Returns: the means squared deviation between the letter frequency in the plaintext and the english letter frequency
+    Raises: ValueError if the list returned from the frequency file conversion doesn't have 26 elements
     """
 
     # English letter frequencies in alphabetical order
     english_frequencies = frequencies_to_list("english_frequencies.txt")
+
+    if len(english_frequencies) != 26:
+        raise ValueError("English frequencies list does not contain an entry for each letter")
 
     # input string to lower case
     input_string = input_string.lower()
