@@ -140,7 +140,7 @@ def repeating_key_XOR(plaintext, key):
     # XOR the repeating_key and the plaintext
     for i in range(plaintext_length):
         XORed_byte = plaintext[i] ^ repeating_key[i]
-        result.append([XORed_byte])
+        result.append(XORed_byte)
 
     return result
 
