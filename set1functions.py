@@ -173,16 +173,16 @@ def break_repeating_key_XOR(ciphertext):
     # Next, split the ciphertext into blocks of size keysize
     block_array = []
     ciphertext_length = len(ciphertext)
-    for i in range(ciphertext_length/keysize):
-        block_array[i] = ciphertext[i*keysize:(i+1)*keysize]
+    for i in range(ciphertext_length//keysize):
+        block_array.append(ciphertext[i*keysize:(i+1)*keysize])
 
     # Transpose the blocks
     transposed_array = block_transpose(block_array)
 
     # Crack each transposed block using single byte XOR and put the keys together
-    key = []
+    key = bytearray()
     for i in range(len(transposed_array)):
-        key.append(single_byte_decipher(transposed_array[i])[0])
+        key.append(ord(single_byte_decipher(transposed_array[i])[0]))
 
     # Decrypt the ciphertext using our key
     return (key, repeating_key_XOR(ciphertext, key))
@@ -206,7 +206,7 @@ def compute_keysize(ciphertext, smallest, largest, blocks):
         # Set the score to 0
         score = 0
         # For each pair of blocks
-        for i in range(blocks):
+        for i in range(blocks - 1):
 
             # Compute edit distance between adjacent blocks
             edit_distance = hamming_distance(ciphertext[i*potential_keysize:(i+1)*potential_keysize],
@@ -215,7 +215,7 @@ def compute_keysize(ciphertext, smallest, largest, blocks):
             score += edit_distance / potential_keysize
 
         # Average all edit distances
-        score /= blocks
+        score /= (blocks - 1)
 
         # Update best keysize
         if score < best_score:
@@ -263,7 +263,6 @@ def decode_b64_file(filename):
 
         ciphertext = ""
         for line in file:
-            line = line.rstrip()
             ciphertext += line
 
     ciphertext = b64decode(ciphertext)
