@@ -222,3 +222,31 @@ def compute_keysize(ciphertext, smallest, largest, blocks):
             keysize = potential_keysize
 
     return keysize
+
+
+def block_transpose(array):
+    """
+    Takes an array of byte blocks, and transposes them ie. take an array of n length m byte strings and generate
+    an array of m length n byte strings by taking all of the first bytes, all of the second etc.
+    Input: An array of byte strings
+    Returns: That array transposed
+    """
+    # Initialise return value
+    retVal = []
+
+    # Loop based on the length of the first element in the array
+    for i in range(len(array[0])):
+
+        # Empty byte array to append onto
+        byte_array = bytearray()
+
+        # Loop over each element of the array
+        for j in range(len(array)):
+            # Append the byte to the bytearray
+            byte_array.append(array[j][i])
+
+        # Append to our return value
+        retVal.append(byte_array)
+
+    return retVal
+
