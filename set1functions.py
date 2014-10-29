@@ -94,4 +94,24 @@ def single_byte_decipher(input_string):
     MSE_list.sort(key = lambda tuple: tuple[1], reverse = True)
 
     # Return the first tuple in the list
-    return MSE_list[0]
+    try:
+        return MSE_list[0]
+    except IndexError:
+        return (b'\xff', -1000000000, "")
+
+def solveChallenge4():
+    """
+    Reads the challenge 4 ciphertext line by line, attempts to decipher it with the best single byte, then compares
+    all of the plaintexts to find the one with the best score
+    """
+    plaintext_list = []
+    i = -1
+
+    with open("Challenge4.txt", 'r') as file:
+        for line in file:
+            i += 1
+            plaintext_list.append((i, single_byte_decipher(b16decode(line.rstrip(), casefold = True))))
+
+    plaintext_list.sort(key = lambda tuple: tuple[1][1], reverse = True)
+
+    print(plaintext_list[0])
