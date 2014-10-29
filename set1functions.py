@@ -159,7 +159,7 @@ def hamming_distance(first_bytes, second_bytes):
 
     return count
 
-def break_repeating_keyXOR(ciphertext):
+def break_repeating_key_XOR(ciphertext):
     """
     Breaks repeating key XOR by first figuring out the most likely keysize, then transposing blocks of length keysize
     and breaking each using a single byte xor. Combining these results produces the most likely key
