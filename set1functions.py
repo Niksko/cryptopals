@@ -186,3 +186,39 @@ def break_repeating_key_XOR(ciphertext):
 
     # Decrypt the ciphertext using our key
     return (key, repeating_key_XOR(ciphertext, key))
+
+def compute_keysize(ciphertext, smallest, largest, blocks):
+    """
+    Computes the probable keysize of a ciphertext by brute force. Take potential keysizes between smallest and largest,
+    take the first <blocks> blocks of the ciphertext, find the hamming distance between adjacent blocks, then average
+    the result and return the keysize with the smallest average
+    Input: ciphertext as bytes
+           smallest, largest and blocks as integers
+    Returns: keysize as an integer
+    """
+    # Default values
+    best_score = 10000000000
+    keysize = largest + 1
+
+    # For each potential keysize
+    for potential_keysize in range(smallest, largest+1):
+
+        # Set the score to 0
+        score = 0
+        # For each pair of blocks
+        for i in range(blocks):
+
+            # Compute edit distance between adjacent blocks
+            edit_distance = hamming_distance(ciphertext[i*potential_keysize:(i+1)*potential_keysize],
+                                             ciphertext[(i+1)*potential_keysize:(i+2)*potential_keysize])
+            # Add to the score, but normalise by keysize
+            score += edit_distance / potential_keysize
+
+        # Average all edit distances
+        score /= blocks
+
+        # Update best keysize
+        if score <= best_score:
+            keysize = potential_keysize
+
+    return keysize
