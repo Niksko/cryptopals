@@ -218,8 +218,9 @@ def compute_keysize(ciphertext, smallest, largest, blocks):
         score /= blocks
 
         # Update best keysize
-        if score <= best_score:
+        if score < best_score:
             keysize = potential_keysize
+            best_score = score
 
     return keysize
 
