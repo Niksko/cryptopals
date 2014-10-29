@@ -158,3 +158,31 @@ def hamming_distance(first_bytes, second_bytes):
         count += bin(byte).count("1")
 
     return count
+
+def break_repeating_keyXOR(ciphertext):
+    """
+    Breaks repeating key XOR by first figuring out the most likely keysize, then transposing blocks of length keysize
+    and breaking each using a single byte xor. Combining these results produces the most likely key
+    Input: ciphertext as raw bytes
+    Returns: tuple consisting of (key, plaintext)
+    """
+
+    # First, compute the most likely keysize
+    keysize = compute_keysize(ciphertext)
+
+    # Next, split the ciphertext into blocks of size keysize
+    block_array = []
+    ciphertext_length = len(ciphertext)
+    for i in range(ciphertext_length/keysize):
+        block_array[i] = ciphertext[i*keysize:(i+1)*keysize]
+
+    # Transpose the blocks
+    transposed_array = block_transpose(block_array)
+
+    # Crack each transposed block using single byte XOR and put the keys together
+    key = []
+    for i in range(len(transposed_array)):
+        key.append(single_byte_decipher(transposed_array[i])[0])
+
+    # Decrypt the ciphertext using our key
+    return (key, repeating_key_XOR(ciphertext, key))
