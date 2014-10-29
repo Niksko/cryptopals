@@ -268,3 +268,25 @@ def decode_b64_file(filename):
     ciphertext = b64decode(ciphertext)
 
     return ciphertext
+
+def detect_aes_ecb(ciphertext_array):
+    """
+    Uses edit distance comparison to detect ciphertext encrypted using AES-128 in ECB mode
+    Computes the average hamming distance between adjacent blocks of size 16 bytes in the ciphertext, then ranks
+    them based on this score
+    Input: an array of ciphertexts as bytes
+    Returns: the line number of the one that most closely matches an encrypted cyphertext
+    """
+    # Default values
+    smallest_index = 0
+    smallest_score = 1000000
+
+    for i in range(len(ciphertext_array)):
+        # Compute the score using the compute keysize function on a single keysize
+        score = compute_keysize(ciphertext_array[i], 16, 16, 10)[0]
+
+        if score < smallest_score:
+            smallest_score = score
+            smallest_index = i
+
+    return i
