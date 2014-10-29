@@ -168,7 +168,7 @@ def break_repeating_key_XOR(ciphertext):
     """
 
     # First, compute the most likely keysize
-    keysize = compute_keysize(ciphertext)
+    keysize = compute_keysize(ciphertext, 2, 40, 4)
 
     # Next, split the ciphertext into blocks of size keysize
     block_array = []
