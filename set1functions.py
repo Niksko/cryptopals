@@ -143,3 +143,21 @@ def repeating_key_XOR(plaintext, key):
         result.append(XORed_byte)
 
     return result
+
+
+def hamming_distance(first_bytes, second_bytes):
+    """
+    Calculates the edit distance between two strings by finding the number of bits that are different
+    Input: two strings of bytes
+    Output: the number of bits difference between them
+    """
+
+    # XOR the two byte strings
+    result = fixed_XOR(first_bytes, second_bytes)
+
+    # Convert each byte to binary, and count the digits
+    count = 0
+    for byte in result:
+        count += bin(byte).count("1")
+
+    return count
