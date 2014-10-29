@@ -1,4 +1,4 @@
-from base64 import b16decode, b64encode
+from base64 import b16decode, b64encode, b64decode
 from string import ascii_lowercase, ascii_letters
 
 def hex_to_base64(inputString):
@@ -251,3 +251,21 @@ def block_transpose(array):
 
     return retVal
 
+
+def decode_b64_file(filename):
+    """
+    Takes a filename and returns the bytestring based on its contents, decoded as base 64
+    Input: A filename to read from
+    Returns: The contents of the file as a bytestring using base 64 decoding
+    """
+
+    with open(filename, 'r') as file:
+
+        ciphertext = ""
+        for line in file:
+            line = line.rstrip()
+            ciphertext += line
+
+    ciphertext = b64decode(ciphertext)
+
+    return ciphertext
