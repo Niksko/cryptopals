@@ -289,4 +289,4 @@ def detect_aes_ecb(ciphertext_array):
             smallest_score = score
             smallest_index = i
 
-    return i
+    return smallest_index
