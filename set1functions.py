@@ -1,5 +1,5 @@
 from base64 import b16decode, b64encode
-from string import ascii_lowercase
+from string import ascii_lowercase, ascii_letters
 
 def hex_to_base64(inputString):
     """
@@ -35,54 +35,40 @@ def fixed_XOR(string_one, string_two):
 def english_plaintext_score(input_string):
     """
     Takes a piece of english plaintext and scores it based on letter frequency
-    The frequency of each letter is computed, and then the mean squared deviation between english frequencies and
-    measured frequencies is computed
+    The score is based on the number of characters in the top 6 that appear in the english language top 6, and similarly
+    for the 6 least common letters
     Input: a string in ascii encoding
-    Returns: the means squared deviation between the letter frequency in the plaintext and the english letter frequency
-    Raises: ValueError if the list returned from the frequency file conversion doesn't have 26 elements
+    Return: a score as derived above
     """
-
-    # English letter frequencies in alphabetical order
-    english_frequencies = frequencies_to_list("english_frequencies.txt")
-
-    if len(english_frequencies) != 26:
-        raise ValueError("English frequencies list does not contain an entry for each letter")
 
     # input string to lower case
     input_string = input_string.lower()
 
-    # Calculate plaintext frequencies for each letter in the plaintext
-    plaintext_frequencies = []
-    string_length = len(input_string)
+    # Count the number of letters
+    frequency_list = []
     for char in ascii_lowercase:
-        char_count = input_string.count(char)
-        plaintext_frequencies.append(char_count/string_length)
+        frequency_list.append((char,input_string.count(char)))
 
-    # Compute the MSE
-    MSE = 0
-    for i in range(26):
-        MSE += (plaintext_frequencies[i] - english_frequencies[i]) ** 2
+    # Sort the list based on the occurance of each letter
+    frequency_list.sort(key = lambda tuple: tuple[1], reverse = True)
 
-    MSE /= 26
-    return MSE
+    # Count the number of letters in the top six that appear in the english top six ETAOIN
+    score = 0
+    for i in range(6):
+        if frequency_list[i][0] in "etaoin":
+            score += 1
 
+    # Count the number of letters in the last six that appear in the english last six VKJXQZ
+    for i in range(20,26):
+        if frequency_list[i][0] in "vkjxqz":
+            score += 1
 
-def frequencies_to_list(input_file):
-    """
-    Reads letter frequencies from a file and converts them to a list
-    Assumes that the frequencies in the file are ordered from a to z
-    Input: filename of frequency table to import
-    Returns: list of all of the lines in the file converted to floats
-    """
+    # Subtract 1 for each non ascii character
+    for char in input_string:
+        if char not in ascii_letters:
+            score -= 1
 
-    retVal = []
-
-    with open(input_file, 'r') as file:
-        for line in file:
-            line = line.rstrip('\n')
-            retVal.append(float(line))
-
-    return retVal
+    return score
 
 
 def single_byte_decipher(input_string):
@@ -97,12 +83,15 @@ def single_byte_decipher(input_string):
     # Loop over all bytes
     for i in range(256):
         xor_bytes = bytes([i for _ in range(len(input_string))])
-        xor_result = fixed_XOR(xor_bytes,input_string)
-        score = english_plaintext_score(xor_result)
-        MSE_list.append((bytes([i]), score, xor_result))
+        try:
+            xor_result = fixed_XOR(xor_bytes,input_string).decode("ascii")
+            score = english_plaintext_score(xor_result)
+            MSE_list.append((bytes([i]), score, xor_result))
+        except UnicodeDecodeError:
+            pass
 
     # Sort the list
-    MSE_list.sort(key = lambda tuple: tuple[1])
+    MSE_list.sort(key = lambda tuple: tuple[1], reverse = True)
 
     # Return the first tuple in the list
     return MSE_list[0]
