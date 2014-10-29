@@ -143,3 +143,17 @@ def repeating_key_XOR(plaintext, key):
         result.append([XORed_byte])
 
     return result
+
+def ascii_to_bytes(string):
+    """
+    Converts an ascii string into bytes
+    Input: Ascii string
+    Returns: bytes corresponding to ascii string
+    """
+
+    byte_string = bytearray()
+
+    for char in string:
+        byte_string.append(ord(char))
+
+    return byte_string
