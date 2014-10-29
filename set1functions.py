@@ -127,7 +127,6 @@ def repeating_key_XOR(plaintext, key):
     Returns: bytes of the XORed result
     """
 
-    result = bytearray()
     repeating_key = bytearray()
 
     # Convert the key into a repeating byte array of the same length as the plaintext
@@ -138,9 +137,7 @@ def repeating_key_XOR(plaintext, key):
         repeating_key.append(key[key_byte])
 
     # XOR the repeating_key and the plaintext
-    for i in range(plaintext_length):
-        XORed_byte = plaintext[i] ^ repeating_key[i]
-        result.append(XORed_byte)
+    result = fixed_XOR(repeating_key, plaintext)
 
     return result
 
