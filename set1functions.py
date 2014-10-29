@@ -115,3 +115,31 @@ def solveChallenge4():
     plaintext_list.sort(key = lambda tuple: tuple[1][1], reverse = True)
 
     print(plaintext_list[0])
+
+def repeating_key_XOR(plaintext, key):
+    """
+    Encodes a plaintext using a repeating key XOR function
+    The first byte of the key is XORed with the first byte of the plaintext
+    The second byte of the key is XORed with the second byte of the plaintext
+    When the bytes in the key have been exhausted, you begin again with the first byte
+    Input: plaintext as a bytes type
+            key as a bytes type
+    Returns: bytes of the XORed result
+    """
+
+    result = bytearray()
+    repeating_key = bytearray()
+
+    # Convert the key into a repeating byte array of the same length as the plaintext
+    key_length = len(key)
+    plaintext_length = len(plaintext)
+    for i in range(plaintext_length):
+        key_byte = i % key_length
+        repeating_key.append(key[key_byte])
+
+    # XOR the repeating_key and the plaintext
+    for i in range(plaintext_length):
+        XORed_byte = plaintext[i] ^ repeating_key[i]
+        result.append([XORed_byte])
+
+    return result
